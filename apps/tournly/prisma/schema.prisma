@@ -20,8 +20,6 @@ model User {
     name      String
     password  String
     role      UserRole @default(USER)
-    teamId    Int?     @unique // ✅ FIXED
-    team      Team?    @relation("TeamCoach", fields: [teamId], references: [id])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
@@ -60,7 +58,6 @@ model Team {
     players      Player[]
     homeGames    Game[]     @relation("HomeTeam")
     awayGames    Game[]     @relation("AwayTeam")
-    coach        User?      @relation("TeamCoach")
     events       Event[]
 }
 
