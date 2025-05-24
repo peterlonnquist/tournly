@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start": "nx dev tournly",
     "prisma:generate": "prisma generate --schema=apps/tournly/prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema=apps/tournly/prisma/schema.prisma"
   },
