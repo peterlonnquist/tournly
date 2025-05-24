@@ -14,19 +14,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: tournly-pgadmin
-    restart: always
-    ports:
-      - '8080:80'
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@tournly.dev
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    depends_on:
-      - postgres
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: tournly-pgadmin
+  #   restart: always
+  #   ports:
+  #     - '8080:80'
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@tournly.dev
+  #     PGADMIN_DEFAULT_PASSWORD: admin123
+  #   depends_on:
+  #     - postgres
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
 
 volumes:
   pgdata:
