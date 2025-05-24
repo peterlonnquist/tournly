@@ -1,0 +1,26 @@
+{
+  "name": "@tournly/tournly-api-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@tournly/tournly-api"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/tournly-api-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@tournly/tournly-api:build",
+          "@tournly/tournly-api:serve"
+        ]
+      }
+    }
+  }
+}
