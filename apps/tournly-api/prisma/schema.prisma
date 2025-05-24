@@ -15,7 +15,122 @@ datasource db {
 }
 
 model User {
-    id    Int    @id @default(autoincrement())
-    email String @unique
-    name  String
+    id        Int      @id @default(autoincrement())
+    email     String   @unique
+    name      String
+    password  String
+    role      UserRole @default(USER)
+    teamId    Int?     @unique // ✅ FIXED
+    team      Team?    @relation("TeamCoach", fields: [teamId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+    ADMIN
+    COACH
+    USER
+}
+
+model Tournament {
+    id        Int            @id @default(autoincrement())
+    name      String
+    startDate DateTime
+    endDate   DateTime
+    location  String
+    type      TournamentType
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    teams     Team[]         @relation("TournamentTeams")
+    games     Game[]
+}
+
+enum TournamentType {
+    ROUND_ROBIN
+    KNOCKOUT
+    GROUP_STAGE
+}
+
+model Team {
+    id           Int        @id @default(autoincrement())
+    name         String
+    city         String
+    tournamentId Int
+    tournament   Tournament @relation("TournamentTeams", fields: [tournamentId], references: [id])
+    players      Player[]
+    homeGames    Game[]     @relation("HomeTeam")
+    awayGames    Game[]     @relation("AwayTeam")
+    coach        User?      @relation("TeamCoach")
+    events       Event[]
+}
+
+model Player {
+    id       Int              @id @default(autoincrement())
+    name     String
+    number   Int
+    position PlayerPosition
+    teamId   Int
+    team     Team             @relation(fields: [teamId], references: [id])
+    stats    PlayerGameStat[]
+    events   Event[]
+}
+
+enum PlayerPosition {
+    GOALIE
+    DEFENSE
+    FORWARD
+}
+
+model Game {
+    id           Int              @id @default(autoincrement())
+    tournamentId Int
+    tournament   Tournament       @relation(fields: [tournamentId], references: [id])
+    homeTeamId   Int
+    homeTeam     Team             @relation("HomeTeam", fields: [homeTeamId], references: [id])
+    awayTeamId   Int
+    awayTeam     Team             @relation("AwayTeam", fields: [awayTeamId], references: [id])
+    date         DateTime
+    location     String
+    createdAt    DateTime         @default(now())
+    updatedAt    DateTime         @updatedAt
+    stats        PlayerGameStat[]
+    events       Event[]
+}
+
+model PlayerGameStat {
+    id        Int    @id @default(autoincrement())
+    playerId  Int
+    gameId    Int
+    goals     Int    @default(0)
+    assists   Int    @default(0)
+    penalties Int    @default(0)
+    minutes   Int    @default(0)
+    player    Player @relation(fields: [playerId], references: [id])
+    game      Game   @relation(fields: [gameId], references: [id])
+}
+
+model Event {
+    id        Int       @id @default(autoincrement())
+    gameId    Int
+    playerId  Int?
+    teamId    Int
+    type      EventType
+    timestamp Int // Seconds from game start
+    period    Int // 1, 2, 3, OT, etc.
+    createdAt DateTime  @default(now())
+
+    game   Game    @relation(fields: [gameId], references: [id])
+    player Player? @relation(fields: [playerId], references: [id])
+    team   Team    @relation(fields: [teamId], references: [id])
+}
+
+enum EventType {
+    GOAL
+    ASSIST
+    PENALTY
+    SAVE
+    SHOT
+    BLOCK
+    FACE_OFF_WIN
+    HIT
 }

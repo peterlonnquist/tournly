@@ -3,11 +3,9 @@
  * This is only a minimal backend to get started.
  */
 
-import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import * as path from 'path';
-
-const prisma = new PrismaClient();
+import userRoutes from './routes/user';
 
 const app = express();
 
@@ -17,9 +15,7 @@ app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to tournly-api!' });
 });
 
-app.get('/api/users', async (req, res) => {
-  res.send(await prisma.user.findMany());
-});
+app.use('/api/users', userRoutes);
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
